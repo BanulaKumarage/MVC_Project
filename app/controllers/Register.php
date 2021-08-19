@@ -49,4 +49,58 @@
             }
             Router::redirect('register/login');
         }
+
+        public function registerAction(){
+            $validation = new Validate();
+            $posted_values = ['fname'=> '','lname'=>'','username'=>'','email'=>'','password'=>'','confirm'=>''];
+
+            if ($_POST){
+                $posted_values = posted_values($_POST);
+                $validation->check($_POST,[
+                    'fname'=>[
+                        'display'=>'First Name',
+                        'reguired'=>true
+                    ],
+                    'lname'=>[
+                        'display'=>'Last Name',
+                        'reguired'=>true
+                    ],
+                    'username'=>[
+                        'display'=>'Username',
+                        'reguired'=>true,
+                        'unique'=>'users',
+                        'min'=>6,
+                        'max'=> 150
+                    ],
+                    'email'=>[
+                        'display'=>'Email',
+                        'reguired'=>true,
+                        'unique'=>'users',
+                        'max'=> 150,
+                        'valaid_email'=>true
+                    ],
+                    'password'=>[
+                        'display'=>'Password',
+                        'reguired'=>true,
+                        'min'=>6,
+                    ],
+                    'confirm'=>[
+                        'display'=>'Confirm password',
+                        'reguired'=>true,
+                        'matches'=>'password'
+                    ]
+                ]);
+            }
+
+            if ($validation->passed()){
+                $newUser = new Users();
+                $newUser->registerNewUser($_POST);
+                $newUser->login();
+                Router::redirect('register/login');
+            }
+
+            $this->view->post = $posted_values;
+            $this->view->displayErrors = $validation->displayErrors();
+            $this->view->render('register/register');
+        }
     }
