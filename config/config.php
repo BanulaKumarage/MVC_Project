@@ -16,4 +16,4 @@
 
     define('CURRENT_USER_SESSION_NAME','akqwqjdJlaIlalq'); // session name for logged in user
     define('REMEMBER_ME_COOKIE_NAME','akshdnkAYUHS81920'); // cookie name for logged in user remeber me
-    define('REMEMBER_COOKIE_EXPIRY',604800); // time in seconds for remember me cookie
+    define('REMEMBER_ME_COOKIE_EXPIRY',2592000); // time in seconds for remember me cookie

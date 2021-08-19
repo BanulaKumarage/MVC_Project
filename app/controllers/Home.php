@@ -26,7 +26,6 @@
             // ]);
 
             // dnd($contacts);
-            
             $this->view->render('home/index');
         }
 
