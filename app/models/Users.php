@@ -28,7 +28,7 @@ class Users extends Model
 
     public function findByUserName($username)
     {
-        return $this->findFrist(['conditions' => 'username=?', 'bind' => [$username]]);
+        return $this->findFirst(['conditions' => 'username=?', 'bind' => [$username]]);
     }
 
     public static function currentLoggedInUser()
@@ -55,21 +55,21 @@ class Users extends Model
     }
 
     public static function loginUserFromCookie(){
-        $user_session_model = new UserSessions();
-        $user_session = $user_session_model->findFirst([
-            'conditions'=>"user_agent = ? AND session = ?",
-            'bind'=>[Session::uagent_no_version(),Cookie::get(REMEMBER_ME_COOKIE_NAME)]
-        ]);
-        
-        if ($user_session->user_id !=''){
-            $user = new self((int)$user_session->user_id);                       
+        $userSession = UserSessions::getFromCookie();
+        if ($userSession->user_id !=''){
+            $user = new self((int)$userSession->user_id);                       
         }
-        $user->login();
+        if ($user){
+            $user->login();
+        }
         return $user;
     }
 
     public function logout(){
         $user_agent = Session::uagent_no_version();
+        $userSession = UserSessions::getFromCookie();
+        // dnd($userSession);
+        // $userSession->delete($userSession->id);
         $this->_db->query("DELETE FROM user_sessions WHERE user_id = ? AND user_agent =?",[$this->id,$user_agent]);
         Session::delete(CURRENT_USER_SESSION_NAME);
         if (Cookie::exists(REMEMBER_ME_COOKIE_NAME)){

@@ -44,7 +44,7 @@ class Model
         return $results;
     }
 
-    public function findFrist($params = [])
+    public function findFirst($params = [])
     {
         $resultsQuery = $this->_db->findFirst($this->_table, $params);
         $result = new $this->_modelName($this->_table);
@@ -63,7 +63,7 @@ class Model
 
     public function findById($id)
     {
-        return $this->findFrist([
+        return $this->findFirst([
             'conditions' => ['id=?'],
             'bind' => [$id]
         ]);
