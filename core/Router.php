@@ -1,51 +1,44 @@
-<?php 
+<?php
 
-    class Router{
-        
-        public static function route($url)
-        {
-            // Controller
-            $controller = (isset($url[0]) && $url!='') ? ucwords($url[0]) : DEFAULT_CONTROLLER;
-            $controller_name = $controller;
-            array_shift($url);
+class Router
+{
 
-            // Action
-            $action = (isset($url[0]) && $url!='') ? $url[0].'Action' : 'indexAction';
-            $action_name = $action;
-            array_shift($url);
+    public static function route($url)
+    {
+        // Controller
+        $controller = (isset($url[0]) && $url != '') ? ucwords($url[0]) : DEFAULT_CONTROLLER;
+        $controller_name = $controller;
+        array_shift($url);
 
-            //params
-            $queryParams = $url;
+        // Action
+        $action = (isset($url[0]) && $url != '') ? $url[0] . 'Action' : 'indexAction';
+        $action_name = $action;
+        array_shift($url);
 
-            // echo $controller."<br>";
-            // echo $action.'<br>';
-            // dnd($url);
-            // echo $controller_name;
-            $dispacth  = new $controller($controller_name,$action);
-            // echo $dispacth;
+        //params
+        $queryParams = $url;
 
-            if (method_exists($controller,$action)){
-                call_user_func_array([$dispacth,$action], $queryParams);
-            }
-            // above part can be done insted of below line
-            // $dispacth -> regAction($queryParams); 
-            else{
-                die('That method doesn\'t exist in the controller '.$controller_name );
-            }
+        $dispacth  = new $controller($controller_name, $action);
 
-        }
-
-        public static function redirect($location){
-            if (!headers_sent()){
-                header('Location: '.SROOT.$location);
-            }else{
-                echo '<script type="text/javascript">';
-                echo 'windows.location.href="'.SROOT.$location.'"';
-                echo '</script>';
-                echo '<noscript>';
-                echo '<meta http-equiv="refresh" content="0;url='.SROOT.'" />';
-                echo '</noscript>';
-                exit;
-            }
+        if (method_exists($controller, $action)) {
+            call_user_func_array([$dispacth, $action], $queryParams);
+        } else {
+            die('That method doesn\'t exist in the controller ' . $controller_name);
         }
     }
+
+    public static function redirect($location)
+    {
+        if (!headers_sent()) {
+            header('Location: ' . SROOT . $location);
+        } else {
+            echo '<script type="text/javascript">';
+            echo 'windows.location.href="' . SROOT . $location . '"';
+            echo '</script>';
+            echo '<noscript>';
+            echo '<meta http-equiv="refresh" content="0;url=' . SROOT . '" />';
+            echo '</noscript>';
+            exit;
+        }
+    }
+}
